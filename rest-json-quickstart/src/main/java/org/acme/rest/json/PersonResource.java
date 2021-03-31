@@ -56,11 +56,13 @@ public class PersonResource {
     @DELETE
     @Path("/delete/{position}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Person> deletePerson(@PathParam int position) {
+    public Person deletePerson(@PathParam int position) {
         if (position < persons.size()) {
+            Person person = persons.get(position);
             persons.remove(position);
+            return person;
         }
-        return persons;
+        return persons.get(persons.size()-1);
     }
 
     @POST
