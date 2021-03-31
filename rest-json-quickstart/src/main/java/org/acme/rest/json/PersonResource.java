@@ -67,14 +67,14 @@ public class PersonResource {
 
     @POST
     @Path("/update/{person_number}/{name}/{surname}")
-    public List<Person> updatePerson(@PathParam int person_number, @PathParam String name, @PathParam String surname) {
+    public Person updatePerson(@PathParam int person_number, @PathParam String name, @PathParam String surname) {
         if (person_number < persons.size()) {
             Person person = persons.get(person_number);
             persons.remove(person_number);
             person.setName(name);
             person.setLastName(surname);
-            persons.add(person_number, person);
+            return person;
         }
-        return persons;
+        return persons.get(persons.size()-1);
     }
 }

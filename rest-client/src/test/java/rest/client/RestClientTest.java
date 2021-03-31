@@ -2,9 +2,7 @@ package rest.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import ru.krista.personinfo.Address;
 import ru.krista.personinfo.Person;
 
@@ -12,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class RestClientTest {
 
     private OkHttpClient client = new OkHttpClient();
@@ -53,6 +52,17 @@ public class RestClientTest {
         ResponseBody responseBody = client.newCall(request).execute().body();
         Person person = objectMapper.readValue(responseBody.string(), Person.class);
         Person expectedPerson = new Person("Sam1", "Jackson1", new Address("street2", "Yaroslavl1", 1233), new ArrayList<>());
+        Assertions.assertEquals(expectedPerson, person);
+    }
+
+    @Test
+    @Order(5)
+    public void updateFirstPerson() throws IOException {
+        Request request = new Request.Builder().url("http://localhost:8080/persons/update/0/name/surname").post(RequestBody.create(MediaType
+                .parse("application/json"), "")).build();
+        ResponseBody responseBody = client.newCall(request).execute().body();
+        Person person = objectMapper.readValue(responseBody.string(), Person.class);
+        Person expectedPerson = new Person("name", "surname", new Address("street1", "Yaroslavl", 123), new ArrayList<>());
         Assertions.assertEquals(expectedPerson, person);
     }
 }
